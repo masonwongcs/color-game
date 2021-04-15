@@ -34,13 +34,7 @@ const Timer = () => {
     if (appContext.active === configs.TOTAL_NO_OF_QUESTIONS) {
       appContext.setActive(appContext.active + 1);
     }
-  }, [
-    appContext.active,
-    appContext.isCorrect,
-    startCounter,
-    count,
-    appContext,
-  ]);
+  }, [appContext.active, appContext.isCorrect]);
 
   useEffect(() => {
     console.log(appContext.score);
