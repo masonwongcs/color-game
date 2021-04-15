@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { TimerWrapper } from "./Styled";
 import AppContext from "../AppContext";
-import { configs } from "../App";
+import { SettingContext } from "../App";
 
 const Timer = () => {
-  const INITIAL_TIMER = configs.INITIAL_TIMER;
+  const settingContext = useContext(SettingContext);
+  const INITIAL_TIMER = settingContext.timer;
   const appContext = useContext(AppContext);
   const [count, setCount] = useState(INITIAL_TIMER);
   const intervalRef = useRef();
@@ -31,7 +32,7 @@ const Timer = () => {
       appContext.setScore(currentScore);
     }
 
-    if (appContext.active === configs.TOTAL_NO_OF_QUESTIONS) {
+    if (appContext.active === settingContext.totalQuestion) {
       appContext.setActive(appContext.active + 1);
     }
   }, [appContext.active, appContext.isCorrect]);

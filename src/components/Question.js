@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { QuestionWrapper } from "./Styled";
 import AppContext from "../AppContext";
-import { configs } from "../App";
+import { SettingContext } from "../App";
 
 const Question = (props) => {
-  const OFFSET = configs.OFFSET;
+  const settingContext = useContext(SettingContext);
+  const OFFSET = settingContext.offset;
   const canvasRef = useRef();
   const appContext = useContext(AppContext);
+  const showAnswerTimeoutRef = useRef();
 
   const [color, setColor] = useState("");
   const [options, setOptions] = useState([]);
+  const [currentAnswer, setCurrentAnswer] = useState("");
 
   useEffect(() => {
     const currentCanvas = canvasRef.current;
@@ -20,12 +23,7 @@ const Question = (props) => {
     const color = `rgb(${r}, ${g}, ${b})`;
 
     ctx.beginPath();
-    ctx.rect(
-      0,
-      0,
-      currentCanvas.getBoundingClientRect().width,
-      currentCanvas.getBoundingClientRect().height
-    );
+    ctx.rect(0, 0, currentCanvas.width, currentCanvas.height);
     ctx.fillStyle = color;
     ctx.fill();
 
@@ -59,8 +57,16 @@ const Question = (props) => {
     setOptions(options);
   }, [canvasRef, OFFSET]);
 
+  useEffect(() => {
+    clearTimeout(showAnswerTimeoutRef.current);
+    showAnswerTimeoutRef.current = setTimeout(() => {
+      const currentActive = appContext.active + 1;
+      appContext.setActive(currentActive);
+    }, 3000);
+  }, [currentAnswer]);
+
   const checkAnswer = (answer) => {
-    console.log(answer, color);
+    setCurrentAnswer(answer);
     if (answer === color) {
       // alert("Correct");
       appContext.setIsCorrect(true);
@@ -68,25 +74,33 @@ const Question = (props) => {
       // alert("Wrong");
       appContext.setIsCorrect(false);
     }
-    const currentActive = appContext.active + 1;
-    appContext.setActive(currentActive);
-    // window.location.reload();
   };
 
   return (
     <QuestionWrapper {...props}>
-      <h3>Q{props.no}/{configs.TOTAL_NO_OF_QUESTIONS}</h3>
+      <h3>
+        Q{props.no}/{settingContext.totalQuestion}
+      </h3>
       <canvas className="question" ref={canvasRef} />
+      {currentAnswer && <span className="correct-color">{color}</span>}
       <p>Pick the correct color</p>
       <div className="answer-options">
         {options.map((item) => {
+          const isCorrect = currentAnswer === item && currentAnswer === color;
+          const isWrong = currentAnswer === item && currentAnswer !== color;
+          const showCorrect = currentAnswer !== "" && item === color;
+
           return (
             <div
-              className="answer-item"
+              className={`answer-item ${
+                isCorrect || showCorrect ? "correct" : isWrong ? "wrong" : ""
+              }`}
               key={item}
               onClick={() => checkAnswer(item)}
               style={{ backgroundColor: item }}
-            />
+            >
+              {currentAnswer !== "" && <span>{item}</span>}
+            </div>
           );
         })}
       </div>

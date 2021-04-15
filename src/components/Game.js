@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { GameWrapper, Score, FinalScore } from "./Styled";
+import React, { useState, useContext } from "react";
+import {GameWrapper, Score, FinalScore, Button} from "./Styled";
 import Question from "./Question";
 import Timer from "./Timer";
 import AppContext from "../AppContext";
-import { configs } from "../App";
+import { SettingContext } from "../App";
 
 const Game = () => {
-  const TOTAL_NO_OF_QUESTIONS = configs.TOTAL_NO_OF_QUESTIONS;
+  const settingContext = useContext(SettingContext);
+  const TOTAL_NO_OF_QUESTIONS = settingContext.totalQuestion;
   const questionArray = [...new Array(TOTAL_NO_OF_QUESTIONS).keys()];
   const [active, setActive] = useState(0);
   const [score, setScore] = useState(0);
@@ -36,7 +37,10 @@ const Game = () => {
               <FinalScore>
                 <p>Your score</p>
                 <div className="bold">{context.score}</div>
-                <button onClick={reset}>restart()</button>
+                <Button onClick={reset}>Restart</Button>
+                <Button onClick={() => settingContext.setCurrentScene(0)}>
+                  Home
+                </Button>
               </FinalScore>
             ) : (
               <>
