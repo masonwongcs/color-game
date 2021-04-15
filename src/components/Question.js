@@ -31,7 +31,7 @@ const Question = (props) => {
 
     const options = [...new Array(3).keys()]
       .map((item) => {
-        const random = Math.random() * OFFSET;
+        // const random = Math.random() * OFFSET;
         const red = Math.ceil(
           r + item - Math.random() * OFFSET <= 0
             ? r + item + Math.random() * OFFSET
@@ -57,7 +57,7 @@ const Question = (props) => {
 
     setColor(color);
     setOptions(options);
-  }, [canvasRef]);
+  }, [canvasRef, OFFSET]);
 
   const checkAnswer = (answer) => {
     console.log(answer, color);

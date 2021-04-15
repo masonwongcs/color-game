@@ -3,7 +3,7 @@ import { TimerWrapper } from "./Styled";
 import AppContext from "../AppContext";
 import { configs } from "../App";
 
-const Timer = ({}) => {
+const Timer = () => {
   const INITIAL_TIMER = configs.INITIAL_TIMER;
   const appContext = useContext(AppContext);
   const [count, setCount] = useState(INITIAL_TIMER);
@@ -25,7 +25,7 @@ const Timer = ({}) => {
 
   useEffect(() => {
     startCounter();
-    console.log("Current active: ", appContext.active)
+    console.log("Current active: ", appContext.active);
     if (appContext.isCorrect) {
       const currentScore = appContext.score + count;
       appContext.setScore(currentScore);
@@ -34,12 +34,18 @@ const Timer = ({}) => {
     if (appContext.active === configs.TOTAL_NO_OF_QUESTIONS) {
       appContext.setActive(appContext.active + 1);
     }
-  }, [appContext.active, appContext.isCorrect]);
+  }, [
+    appContext.active,
+    appContext.isCorrect,
+    startCounter,
+    count,
+    appContext,
+  ]);
 
   useEffect(() => {
     console.log(appContext.score);
     appContext.setIsCorrect(false);
-  }, [appContext.score]);
+  }, [appContext.score, appContext]);
 
   return (
     <TimerWrapper data-count={count}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import { GameWrapper, Score, FinalScore } from "./Styled";
 import Question from "./Question";
 import Timer from "./Timer";
